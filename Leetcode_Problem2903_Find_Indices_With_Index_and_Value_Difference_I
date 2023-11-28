@@ -1,0 +1,57 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* findIndices(int* nums, int numsSize, int indexDifference, int valueDifference, int* returnSize) {
+    int *ans = malloc(sizeof(int)*2);
+    ans[0] = -1;
+    ans[1] = -1;
+    *returnSize = 2;
+    for( int i = 0 ; i < numsSize ; i++)
+    {
+        for( int j = i ; j < numsSize ; j++)
+        {
+            if((abs(i-j) >= indexDifference) && (abs(nums[i] - nums[j]) >= valueDifference))
+            {
+                ans[0] = i;
+                ans[1] = j;
+                return ans;
+            }
+        }
+    }
+    return ans;
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int * findIndices(const int * const nums, const int numsLen, const int idxDiff, const int valDiff, int * const pRetsLen){
+	*pRetsLen = 2;
+	int * const rets = malloc(sizeof (int)*(*pRetsLen));
+
+	int prefixMinIdx = 0, prefixMaxIdx = 0;
+	for (int left = 0, right = idxDiff ; right < numsLen ; left++, right++)
+    {
+		if (nums[left] < nums[prefixMinIdx])
+			prefixMinIdx = left;
+		if (nums[right] - nums[prefixMinIdx] >= valDiff)
+        {
+			rets[0] = prefixMinIdx;
+			rets[1] = right;
+			return rets;
+		}
+		if (nums[left] > nums[prefixMaxIdx])
+			prefixMaxIdx = left;
+		if (nums[prefixMaxIdx] - nums[right] >= valDiff)
+        {
+			rets[0] = prefixMaxIdx;
+			rets[1] = right;
+			return rets;			
+		}
+	}
+	memset(rets, -1, sizeof(int)*(*pRetsLen));
+	return rets;
+}
